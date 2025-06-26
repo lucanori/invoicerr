@@ -67,16 +67,12 @@ export class AuthService {
         };
     }
 
-    async refreshToken(id: string, token: string) {
+    async refreshToken(token: string) {
         try {
             const payload = this.jwt.verify(token, { secret: AuthService.getJWTSecret() });
 
             if (!payload || !payload.sub || !payload.email) {
                 throw new Error('Invalid refresh token payload');
-            }
-
-            if (payload.sub !== id) {
-                throw new Error('Token does not match user ID');
             }
 
             const user = await this.prisma.user.findUnique({ where: { id: payload.sub } });

@@ -28,8 +28,8 @@ export class AuthController {
 
     @Post('refresh')
     @LoginRequired()
-    refreshTokens(@User() user: CurrentUser) {
-        return this.authService.refreshToken(user.id, user.accessToken);
+    refreshTokens(@Body() body: { refreshToken: string }) {
+        return this.authService.refreshToken(body.refreshToken);
     }
 
 }

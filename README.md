@@ -1,10 +1,8 @@
-# Boilerplate Frontend Project
+# Invoicerr
 
-A simple boilerplate for a frontend project made with:
+Invoicerr is a simple, open-source invoicing application designed to help freelancers manage their invoices efficiently. It provides a user-friendly interface for creating, sending, and tracking invoices, making it easier for freelancers to get paid on time.
 
-- React
-- TypeScript
-- Vite
-- Tailwind CSS
-- shadcn/ui
-- generouted
+## Features
+- Create and manage invoices
+- Create and manage clients
+- Track invoice status

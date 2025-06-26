@@ -6,3 +6,38 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+
+model User {
+  id        String @id @default(cuid())
+  firstname String
+  lastname  String
+  email     String @unique
+  password  String
+}
+
+model Company {
+  id         String  @id @default(cuid())
+  name       String
+  language   String  @default("en")
+  currency   String  @default("EUR")
+  VAT        String?
+  address    String?
+  postalCode String?
+  city       String?
+  country    String?
+  phone      String?
+  email      String?
+}
+
+model Client {
+  id               String  @id @default(cuid())
+  name             String
+  contactFirstname String
+  contactLastname  String
+  contactEmail     String  @unique
+  contactPhone     String?
+  address          String?
+  postalCode       String?
+  city             String?
+  country          String?
+}

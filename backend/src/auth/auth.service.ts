@@ -35,7 +35,15 @@ export class AuthService {
             },
         });
 
-        return user;
+        return {
+            user: {
+                id: user.id,
+                firstname: user.firstname,
+                lastname: user.lastname,
+                email: user.email,
+            },
+            message: 'User created successfully',
+        };
     }
 
     async signIn(email: string, password: string) {

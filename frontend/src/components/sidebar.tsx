@@ -5,6 +5,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Link, useLocation, useNavigate } from "react-router"
 import {
     Sidebar as RootSidebar,
     SidebarContent,
@@ -17,7 +18,6 @@ import {
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
-import { Link } from "react-router"
 import { useAuth } from "@/contexts/auth"
 
 const items: { title: string, icon: React.ReactNode, url: string }[] = [
@@ -49,6 +49,7 @@ const items: { title: string, icon: React.ReactNode, url: string }[] = [
 ]
 
 export function Sidebar() {
+    const location = useLocation()
     const { user } = useAuth()
 
     return (
@@ -73,10 +74,10 @@ export function Sidebar() {
                         {items.map((item, index) => (
                             <SidebarMenuItem key={index}>
                                 <SidebarMenuButton asChild>
-                                    <a href={item.url} className="flex items-center gap-2">
+                                    <Link to={item.url} className={`flex items-center gap-2 ${location.pathname === item.url ? 'text-sidebar-accent-foreground bg-sidebar-accent' : ''}`}>
                                         {item.icon}
                                         <span>{item.title}</span>
-                                    </a>
+                                    </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
                         ))}

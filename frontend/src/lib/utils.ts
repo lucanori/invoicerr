@@ -1,3 +1,4 @@
+
 import { clsx, type ClassValue } from "clsx"
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge"
@@ -13,6 +14,45 @@ type UseGetResult<T> = {
   refetch: () => void;
 };
 
+export async function authenticatedFetch(input: RequestInfo, init: RequestInit = {}, retry = true, accessToken = null, setAccessToken?: (s: string) => any): Promise<Response> {
+  const token = accessToken || localStorage.getItem("accessToken");
+
+  const res = await fetch(input, {
+    ...init,
+    headers: {
+      ...(init.headers || {}),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
+
+  const isExpired = res.headers.get("Www-Authenticate") === "expired_token";
+
+  if (isExpired && retry) {
+    const refreshRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/refresh`, {
+      body: JSON.stringify({ refreshToken: localStorage.getItem("refreshToken") }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST"
+    });
+
+    if (refreshRes.ok) {
+      const { access_token } = await refreshRes.json();
+      if (setAccessToken) setAccessToken(access_token);
+      localStorage.setItem("accessToken", access_token);
+      return authenticatedFetch(input, init, false, access_token);
+    } else {
+      throw new Error("Token refresh failed");
+    }
+  } else if (isExpired && !retry) {
+    console.error("Token expired and no retry attempted. Please log in again.");
+    console.log("Headers:", res.headers);
+    console.log("Token:", token);
+  }
+
+  return res;
+}
+
 export function useGet<T = any>(url: string, options?: RequestInit): UseGetResult<T> {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
@@ -23,17 +63,11 @@ export function useGet<T = any>(url: string, options?: RequestInit): UseGetResul
     let cancelled = false;
     setLoading(true);
 
-    const token = localStorage.getItem("token");
-
-    fetch(`${import.meta.env.VITE_BACKEND_URL}${url}`, {
+    authenticatedFetch(`${import.meta.env.VITE_BACKEND_URL}${url}`, {
       ...options,
       method: "GET",
-      headers: {
-        ...(options?.headers || {}),
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
     })
-      .then((res) => {
+      .then(async (res) => {
         if (!res.ok) throw new Error(`GET ${url} failed`);
         return res.json();
       })
@@ -71,6 +105,7 @@ type UsePostResult<T> = {
   loading: boolean;
   error: Error | null;
 };
+
 function createMethodHook(method: string) {
   return function useRequest<T = any>(url: string, options: UseRequestOptions = {}): UsePostResult<T> {
     const [data, setData] = useState<T | null>(null);
@@ -81,16 +116,13 @@ function createMethodHook(method: string) {
       setLoading(true);
       setError(null);
 
-      const token = localStorage.getItem("token");
-
       try {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}${url}`, {
+        const res = await authenticatedFetch(`${import.meta.env.VITE_BACKEND_URL}${url}`, {
           method,
           headers: {
             "Content-Type": "application/json",
             ...(options.headers || {}),
             ...(extraOptions.headers || {}),
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
           },
           body: JSON.stringify(body ?? options.body),
           ...options,

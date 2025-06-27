@@ -1,29 +1,32 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
+import Loading from "@/pages/_loading/loading";
+import { authenticatedFetch } from "@/lib/utils";
+
 const AuthContext = createContext<{
     accessToken: string | null;
-    setAccessToken: (newToken: string) => void;
-
     refreshToken: string | null;
-    setRefreshToken: (newToken: string) => void;
+    user: any | null;
+    loading: boolean;
+    setAccessToken: (t: string | null) => void;
+    setRefreshToken: (t: string | null) => void;
 }>({
     accessToken: null,
-    setAccessToken: () => { },
     refreshToken: null,
+    user: null,
+    loading: true,
+    setAccessToken: () => { },
     setRefreshToken: () => { },
 });
 
-const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [accessToken, setAccessToken_] = useState(localStorage.getItem("accessToken"));
     const [refreshToken, setRefreshToken_] = useState(localStorage.getItem("refreshToken"));
+    const [user, setUser] = useState<any | null>(null);
+    const [loading, setLoading] = useState(true);
 
-    const setAccessToken = (newToken: string) => {
-        setAccessToken_(newToken);
-    };
-
-    const setRefreshToken = (newToken: string) => {
-        setRefreshToken_(newToken);
-    };
+    const setAccessToken = (t: string | null) => setAccessToken_(t);
+    const setRefreshToken = (t: string | null) => setRefreshToken_(t);
 
     useEffect(() => {
         if (accessToken) {
@@ -41,23 +44,40 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }, [refreshToken]);
 
-    const contextValue = useMemo(
+    useEffect(() => {
+        const defaultHeaders: Record<string, string> = {};
+        if (accessToken) defaultHeaders["Authorization"] = `Bearer ${accessToken}`;
+
+        async function fetchMe() {
+            try {
+                const res = await authenticatedFetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/me`, {
+                    method: "GET"
+                }, true, null, setAccessToken);
+                if (!res.ok) throw new Error("Non authentifié");
+                const payload = await res.json();
+                setUser(payload.user);
+            } catch {
+                setUser(null);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchMe();
+    }, [accessToken]);
+
+    const value = useMemo(
         () => ({
             accessToken,
             refreshToken,
+            user,
+            loading,
             setAccessToken,
             setRefreshToken,
         }),
-        [accessToken, refreshToken, setAccessToken, setRefreshToken]
+        [accessToken, refreshToken, user, loading]
     );
 
-    return (
-        <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
-    );
+    return <AuthContext.Provider value={value}>{loading ? <Loading /> : children}</AuthContext.Provider>;
 };
 
-export const useAuth = () => {
-    return useContext(AuthContext);
-};
-
-export default AuthProvider;
+export const useAuth = () => useContext(AuthContext);

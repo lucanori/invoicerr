@@ -7,6 +7,14 @@ export default function Clients() {
         return <Navigate to="/login" />
     }
 
+    /*
+    Page content:
+
+    - Clients list (active/inactive)
+    - Create new client button
+    - Client details page (view/edit/delete [soft-delete])
+    */
+
     return (
         <div className="flex items-center justify-center h-full w-full">
             <h1 className="text-2xl font-bold">Clients</h1>

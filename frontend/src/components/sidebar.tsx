@@ -5,7 +5,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Link, useLocation, useNavigate } from "react-router"
+import { Link, useLocation } from "react-router"
 import {
     Sidebar as RootSidebar,
     SidebarContent,

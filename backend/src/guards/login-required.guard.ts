@@ -25,7 +25,19 @@ export class LoginRequiredGuard implements CanActivate {
     }
 
     try {
-      const payload = this.jwt.verify(accessToken) as { sub: string, email: string };
+      let payload: { sub: string, email: string };
+
+      try {
+        payload = this.jwt.verify(accessToken) as { sub: string, email: string };
+      } catch (error) {
+        if (error.name === 'TokenExpiredError') {
+          throw new UnauthorizedException({
+            message: 'Access token expired',
+            headers: { 'WWW-Authenticate': 'expired_token' },
+          });
+        }
+        throw new UnauthorizedException('Invalid access token');
+      }
 
       if (!payload || !payload.sub || !payload.email) {
         throw new UnauthorizedException('Invalid access token payload');

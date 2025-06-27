@@ -7,5 +7,5 @@ export default function Home() {
         return <Navigate to="/login" />
     }
 
-    return <h1>Home</h1>
+    return <Navigate to="/dashboard" />
 }

@@ -3,10 +3,17 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import Loading from "@/pages/_loading/loading";
 import { authenticatedFetch } from "@/lib/utils";
 
+interface User {
+    id: string;
+    email: string;
+    firstname: string;
+    lastname: string;
+}
+
 const AuthContext = createContext<{
     accessToken: string | null;
     refreshToken: string | null;
-    user: any | null;
+    user: User | null;
     loading: boolean;
     setAccessToken: (t: string | null) => void;
     setRefreshToken: (t: string | null) => void;
@@ -22,7 +29,7 @@ const AuthContext = createContext<{
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [accessToken, setAccessToken_] = useState(localStorage.getItem("accessToken"));
     const [refreshToken, setRefreshToken_] = useState(localStorage.getItem("refreshToken"));
-    const [user, setUser] = useState<any | null>(null);
+    const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
     const setAccessToken = (t: string | null) => setAccessToken_(t);
@@ -55,7 +62,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 }, true, null, setAccessToken);
                 if (!res.ok) throw new Error("Non authentifié");
                 const payload = await res.json();
-                setUser(payload.user);
+                setUser(payload);
             } catch {
                 setUser(null);
             } finally {

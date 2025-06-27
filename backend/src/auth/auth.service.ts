@@ -98,11 +98,7 @@ export class AuthService {
 
     async refreshToken(token: string) {
         try {
-            console.log("Refreshing token:", token);
-            console.log("JWT Secret:", AuthService.getJWTSecret());
             const payload = this.jwt.verify<{ sub: string, email: string, iat: number, exp: number }>(token, { secret: AuthService.getJWTSecret() });
-
-            console.log("Payload:", payload);
 
             if (!payload || !payload.sub || !payload.email) {
                 throw new Error('Invalid refresh token payload');
@@ -121,7 +117,6 @@ export class AuthService {
 
             return { access_token: newAccessToken };
         } catch (error) {
-            console.error("Error refreshing token:", error);
             throw new Error('Invalid refresh token');
         }
     }

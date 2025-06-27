@@ -14,6 +14,7 @@ export class AuthController {
     @Get('me')
     @LoginRequired()
     getMe(@User() user: CurrentUser) {
+        return this.authService.getMe(user.id);
     }
 
     @Post('signup')
@@ -27,7 +28,6 @@ export class AuthController {
     }
 
     @Post('refresh')
-    @LoginRequired()
     refreshTokens(@Body() body: { refreshToken: string }) {
         return this.authService.refreshToken(body.refreshToken);
     }

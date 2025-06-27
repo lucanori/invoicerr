@@ -5,6 +5,9 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 
+const ACCESS_DURATION = '1min';
+const REFRESH_DURATION = '7d';
+
 @Injectable()
 export class AuthService {
     constructor(private readonly prisma: PrismaService, private readonly jwt: JwtService) { }
@@ -14,7 +17,25 @@ export class AuthService {
         const platform = os.platform();
         const arch = os.arch();
         const ram = os.totalmem();
-        return bcrypt.hashSync(`${platform}-${arch}-${ram}`, 10);
+        return Buffer.from(`${platform}-${arch}-${ram}`).toString('base64');
+    }
+
+    async getMe(userId: string) {
+        const user = await this.prisma.user.findUnique({
+            where: { id: userId },
+            select: {
+                id: true,
+                firstname: true,
+                lastname: true,
+                email: true,
+            },
+        });
+
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        return user;
     }
 
     async signUp(firstname: string, lastname: string, email: string, password?: string) {
@@ -56,11 +77,11 @@ export class AuthService {
         const payload = { sub: user.id, email: user.email };
         const accessToken = this.jwt.sign(payload, {
             secret: AuthService.getJWTSecret(),
-            expiresIn: '1h',
+            expiresIn: ACCESS_DURATION,
         });
         const refreshToken = this.jwt.sign(payload, {
             secret: AuthService.getJWTSecret(),
-            expiresIn: '7d',
+            expiresIn: REFRESH_DURATION,
         });
 
         return {
@@ -77,7 +98,11 @@ export class AuthService {
 
     async refreshToken(token: string) {
         try {
-            const payload = this.jwt.verify(token, { secret: AuthService.getJWTSecret() });
+            console.log("Refreshing token:", token);
+            console.log("JWT Secret:", AuthService.getJWTSecret());
+            const payload = this.jwt.verify<{ sub: string, email: string, iat: number, exp: number }>(token, { secret: AuthService.getJWTSecret() });
+
+            console.log("Payload:", payload);
 
             if (!payload || !payload.sub || !payload.email) {
                 throw new Error('Invalid refresh token payload');
@@ -91,11 +116,12 @@ export class AuthService {
 
             const newAccessToken = this.jwt.sign({ sub: user.id, email: user.email }, {
                 secret: AuthService.getJWTSecret(),
-                expiresIn: '1h',
+                expiresIn: ACCESS_DURATION,
             });
 
             return { access_token: newAccessToken };
         } catch (error) {
+            console.error("Error refreshing token:", error);
             throw new Error('Invalid refresh token');
         }
     }

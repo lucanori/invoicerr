@@ -12,6 +12,7 @@ export class LoginRequiredGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<RequestWithUser>();
+    const response = context.switchToHttp().getResponse();
     const token = request.headers['authorization'];
 
     if (!token || typeof token !== 'string' || !token.startsWith('Bearer ')) {
@@ -25,17 +26,16 @@ export class LoginRequiredGuard implements CanActivate {
     }
 
     try {
-      let payload: { sub: string, email: string };
+      let payload: { sub: string, email: string, iat: number, exp: number };
 
       try {
-        payload = this.jwt.verify(accessToken) as { sub: string, email: string };
-      } catch (error) {
-        if (error.name === 'TokenExpiredError') {
-          throw new UnauthorizedException({
-            message: 'Access token expired',
-            headers: { 'WWW-Authenticate': 'expired_token' },
-          });
+        payload = this.jwt.verify(accessToken);
+        if (payload && payload.exp < Math.floor(Date.now() / 1000)) {
+          response.setHeader('WWW-Authenticate', 'expired_token');
+          throw new UnauthorizedException('Access token has expired');
         }
+      } catch (error) {
+        response.setHeader('WWW-Authenticate', 'expired_token');
         throw new UnauthorizedException('Invalid access token');
       }
 

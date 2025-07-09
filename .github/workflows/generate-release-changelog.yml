@@ -50,8 +50,9 @@ jobs:
             cp CHANGELOG.md CHANGELOG.cleaned
           fi
 
-          awk '/^## \[v/{exit} {print}' CHANGELOG.cleaned > header.md
-          awk 'f{print} /^## \[v/{f=1; print}' CHANGELOG.cleaned > tail.md
+          # Handle both semantic-release format (# 1.0.0) and conventional format (## [v1.0.0])
+          awk '/^# [0-9]/{exit} /^## \[v/{exit} {print}' CHANGELOG.cleaned > header.md
+          awk 'f{print} /^# [0-9]/{f=1; print} /^## \[v/{f=1; print}' CHANGELOG.cleaned > tail.md
 
           echo "Combining updated changelog parts..."
           cat header.md CHANGELOG-release.md > CHANGELOG.md.new

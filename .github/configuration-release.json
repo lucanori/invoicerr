@@ -1,0 +1,50 @@
+{
+  "template": "## [{{toTag}}] - {{targetDate}}\n\n{{changelog}}\n\n---\n",
+  "pr_template": "- {{title}} #{{number}}",
+  "empty_template": "- No changes",
+  "categories": [
+    {
+      "title": "### 🚀 Features",
+      "labels": ["feature", "enhancement", "feat"]
+    },
+    {
+      "title": "### 🐛 Bug Fixes", 
+      "labels": ["bug", "fix", "bugfix"]
+    },
+    {
+      "title": "### 📚 Documentation",
+      "labels": ["documentation", "docs"]
+    },
+    {
+      "title": "### 🔧 Maintenance",
+      "labels": ["chore", "maintenance", "refactor"]
+    },
+    {
+      "title": "### ⬆️ Dependencies",
+      "labels": ["dependencies", "deps"]
+    }
+  ],
+  "ignore_labels": [
+    "skip-changelog",
+    "release"
+  ],
+  "sort": "ASC",
+  "transformers": [
+    {
+      "pattern": "^(feat|feature)(\\(.+\\))?!?:",
+      "target": "🚀 $1"
+    },
+    {
+      "pattern": "^(fix|bugfix)(\\(.+\\))?!?:",
+      "target": "🐛 $1"  
+    },
+    {
+      "pattern": "^(docs?)(\\(.+\\))?!?:",
+      "target": "📚 $1"
+    },
+    {
+      "pattern": "^(chore|refactor)(\\(.+\\))?!?:",
+      "target": "🔧 $1"
+    }
+  ]
+} 

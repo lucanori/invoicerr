@@ -1,33 +1,38 @@
 services:
   invoicerr:
-    image: ghcr.io/impre-visible/invoicerr:latest
+    image: ghcr.io/lucanori/invoicerr:latest
+    container_name: invoicerr
+    restart: unless-stopped
+    networks:
+      - invoicerr
     ports:
-      - "80:80"
-    environment:
-      - DATABASE_URL=postgresql://invoicerr:invoicerr@invoicerr_db:5432/invoicerr_db
-
-      - APP_URL=https://invoicerr.example.com # Required for email templates, as it redirects to the app
-
-      # Required for email features
-      - SMTP_HOST=smtp-relay.example.com
-      - SMTP_USER="username@example.com"
-      - SMTP_FROM="user-from@example.com" # Not required if SMTP_USER is the same as SMTP_FROM
-      - SMTP_PASSWORD="your_smtp_password"
-
-      # Optional, but recommended for docker deployments
-      - JWT_SECRET="your_jwt_secret" # Used for JWT authentication, can be any random string
+      - "4274:80"
     depends_on:
       - invoicerr_db
+    environment:
+      - DATABASE_URL=postgresql://${INVOICERR_DB_USER}:${INVOICERR_DB_PASSWORD}@invoicerr_db:5432/${INVOICERR_DB_NAME}
+      - APP_URL=https://your-domain.com
+      - JWT_SECRET=${INVOICERR_JWT_SECRET}
+      # Optional: uncomment to enable email features
+      # - SMTP_HOST=smtp-relay.example.com
+      # - SMTP_USER="username@example.com"
+      # - SMTP_FROM="user-from@example.com" # Not required if SMTP_USER is the same as SMTP_FROM
+      # - SMTP_PASSWORD="your_smtp_password"
 
   invoicerr_db:
     image: postgres:latest
+    user: ${PUID}:${PGID}
+    container_name: invoicerr_db
+    restart: unless-stopped
+    networks:
+      - invoicerr
     environment:
-      POSTGRES_USER: invoicerr
-      POSTGRES_PASSWORD: invoicerr
-      POSTGRES_DB: invoicerr_db
+      - POSTGRES_USER=${INVOICERR_DB_USER}
+      - POSTGRES_PASSWORD=${INVOICERR_DB_PASSWORD}
+      - POSTGRES_DB=${INVOICERR_DB_NAME}
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - ${APPDATA}/invoicerr/db:/var/lib/postgresql/data
 
-volumes:
-  db_data:
-    driver: local
+networks:
+  invoicerr:
+    driver: bridge

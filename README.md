@@ -16,10 +16,11 @@ Invoicerr is a simple, open-source invoicing application designed to help freela
 - Custom brand identity: logo, company name, VAT, and more  
 - Authentication via JWT (stored in local storage)  
 - International-friendly: Default English UI, customizable currencies  
-- SQLite database for quick local setup  
-- Docker & docker-compose ready for self-hosting  
-- Built with modern stack: React, NestJS, Prisma, SQLite/PostgreSQL  
+- PostgreSQL database for production deployments
+- Docker & Docker Bake ready for self-hosting with multi-platform support
+- Built with modern stack: React 19, NestJS 11, Prisma, PostgreSQL, pnpm
 - REST API backend, ready for future integrations
+- Security-hardened containers with non-root execution
 
 ---
 
@@ -47,6 +48,54 @@ The fastest way to run Invoicerr is using Docker Compose. A prebuilt image is av
    http://localhost
    ```
 
+### 🏗️ Building from Source
+
+If you want to build the Docker image locally or need custom modifications:
+
+#### Prerequisites
+- Docker with Buildx support
+- Docker Bake (included with Docker Desktop)
+
+#### Build Commands
+
+```bash
+# Local development build
+docker buildx bake image-local
+
+# Multi-platform production build (AMD64 + ARM64)
+docker buildx bake image-all
+
+# Push to registry
+docker buildx bake image-push
+
+# Security scan build
+docker buildx bake security-scan
+```
+
+#### Build Targets
+
+- **`image-local`**: Local development image with caching
+- **`image-all`**: Multi-platform production build (linux/amd64, linux/arm64)
+- **`image-push`**: Build and push to container registry
+- **`security-scan`**: Build for security scanning (cache-only output)
+
+#### Container Testing
+
+Validate your container build with Goss:
+
+```bash
+# Install Goss (if not already installed)
+curl -fsSL https://goss.rocks/install | sh
+
+# Run container validation tests
+goss -g tests.yaml validate --format tap
+
+# Or test against running container
+docker run -d --name test-invoicerr invoicerr:local
+goss -g tests.yaml validate --format documentation
+docker stop test-invoicerr && docker rm test-invoicerr
+```
+
 ---
 
 ### 🔧 Environment Variables
@@ -73,15 +122,42 @@ These environment variables are defined in `docker-compose.yml` under the `invoi
 
 Make sure port 80 is available on your host machine, or change the mapping.
 
+## 🏗️ Architecture & Tech Stack
+
+### Frontend
+- **React 19** - Latest React with concurrent features
+- **TypeScript 5.8** - Type-safe development
+- **Vite 7** - Lightning-fast build tool
+- **Tailwind CSS 4** - Utility-first styling
+- **shadcn/ui** - Modern, accessible components
+- **React Router 7** - Client-side routing
+- **React Hook Form** - Performance forms
+- **Zod** - Schema validation
+
+### Backend  
+- **NestJS 11** - Progressive Node.js framework
+- **Prisma 6** - Type-safe database toolkit
+- **PostgreSQL** - Production database
+- **JWT Authentication** - Secure token-based auth
+- **Puppeteer** - PDF generation
+- **Nodemailer** - Email functionality
+
+### Infrastructure
+- **Docker** - Containerization with multi-stage builds
+- **Docker Bake** - Advanced build configurations
+- **Nginx** - Reverse proxy and static file serving
+- **pnpm** - Fast, efficient package management
+- **Goss** - Container testing and validation
+
 ---
 
 ## 💻 Manual Installation (Local Development)
 
 ### Prerequisites
 
-- Node.js v20+  
-- SQLite (or configure another `DATABASE_URL`)  
-- PNPM or NPM
+- Node.js v22+
+- PostgreSQL database (or configure `DATABASE_URL` for other databases)
+- pnpm (recommended) or npm
 
 ### Steps
 
@@ -91,24 +167,65 @@ Make sure port 80 is available on your host machine, or change the mapping.
    cd invoicerr
    ```
 
-2. Backend setup:  
+2. Install pnpm (if not already installed):
+   ```bash
+   npm install -g corepack
+   corepack enable
+   corepack prepare pnpm@latest --activate
+   ```
+
+3. Backend setup:  
    ```bash
    cd backend
-   npm install
+   pnpm install
    npx prisma generate
-   npm run dev
+   pnpm run start:dev
    ```
 
-3. Frontend setup (in a new terminal):  
+4. Frontend setup (in a new terminal):  
    ```bash
    cd frontend
-   npm install
-   npm run dev
+   pnpm install
+   pnpm run dev
    ```
 
-4. Open in your browser:  
+5. Open in your browser:  
    - Frontend: `http://localhost:5173`  
    - API: `http://localhost:3000`
+
+### 🛠️ Development Commands
+
+#### Backend
+```bash
+# Development server with hot reload
+pnpm run start:dev
+
+# Production build
+pnpm run build
+
+# Run tests
+pnpm run test
+
+# Database operations
+npx prisma generate    # Generate Prisma client
+npx prisma migrate dev # Run database migrations
+npx prisma studio     # Open Prisma Studio
+```
+
+#### Frontend
+```bash
+# Development server
+pnpm run dev
+
+# Production build
+pnpm run build
+
+# Preview production build
+pnpm run preview
+
+# Linting
+pnpm run lint
+```
 
 ---
 

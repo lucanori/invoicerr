@@ -1,50 +1,69 @@
 {
   "template": "## [{{toTag}}] - {{targetDate}}\n\n{{changelog}}\n\n---\n",
   "pr_template": "- {{title}} #{{number}}",
+  "commit_template": "- {{title}} ([{{hash}}]({{url}}))",
   "empty_template": "- No changes",
+  "base_branches": ["main"],
+  "include_open": false,
+  "include_closed": true,
+  "include_merged": true,
+  "include_commits": true,
   "categories": [
     {
       "title": "### 🚀 Features",
-      "labels": ["feature", "enhancement", "feat"]
+      "labels": ["feature", "enhancement", "feat"],
+      "commits": {
+        "patterns": ["^feat(\\(.+\\))?!?:", "^feature(\\(.+\\))?!?:"]
+      }
     },
     {
       "title": "### 🐛 Bug Fixes", 
-      "labels": ["bug", "fix", "bugfix"]
+      "labels": ["bug", "fix", "bugfix"],
+      "commits": {
+        "patterns": ["^fix(\\(.+\\))?!?:", "^bugfix(\\(.+\\))?!?:"]
+      }
     },
     {
       "title": "### 📚 Documentation",
-      "labels": ["documentation", "docs"]
+      "labels": ["documentation", "docs"],
+      "commits": {
+        "patterns": ["^docs?(\\(.+\\))?!?:"]
+      }
     },
     {
       "title": "### 🔧 Maintenance",
-      "labels": ["chore", "maintenance", "refactor"]
+      "labels": ["chore", "maintenance", "refactor"],
+      "commits": {
+        "patterns": ["^chore(\\(.+\\))?!?:", "^refactor(\\(.+\\))?!?:", "^style(\\(.+\\))?!?:"]
+      }
     },
     {
       "title": "### ⬆️ Dependencies",
-      "labels": ["dependencies", "deps"]
+      "labels": ["dependencies", "deps"],
+      "commits": {
+        "patterns": ["^build(\\(.+\\))?!?:", "^ci(\\(.+\\))?!?:"]
+      }
+    },
+    {
+      "title": "### Other Changes",
+      "labels": [],
+      "commits": {
+        "patterns": [".*"]
+      }
     }
   ],
   "ignore_labels": [
     "skip-changelog",
     "release"
   ],
-  "sort": "ASC",
-  "transformers": [
-    {
-      "pattern": "^(feat|feature)(\\(.+\\))?!?:",
-      "target": "🚀 $1"
-    },
-    {
-      "pattern": "^(fix|bugfix)(\\(.+\\))?!?:",
-      "target": "🐛 $1"  
-    },
-    {
-      "pattern": "^(docs?)(\\(.+\\))?!?:",
-      "target": "📚 $1"
-    },
-    {
-      "pattern": "^(chore|refactor)(\\(.+\\))?!?:",
-      "target": "🔧 $1"
-    }
-  ]
+  "ignore_commits": {
+    "patterns": [
+      "^chore\\(release\\):",
+      "^Merge branch",
+      "^Merge pull request",
+      "\\[skip ci\\]",
+      "\\[skip changelog\\]"
+    ]
+  },
+  "sort": "ASC"
 } 

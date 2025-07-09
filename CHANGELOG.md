@@ -1,3 +1,10 @@
+# [1.0.0-alpha.2](https://github.com/lucanori/invoicerr/compare/v1.0.0-alpha.1...v1.0.0-alpha.2) (2025-07-09)
+
+
+### Features
+
+* update Docker configuration and environment setup ([df070cb](https://github.com/lucanori/invoicerr/commit/df070cbe491c0353cd4c9779a0c482a616f85bdb))
+
 # 1.0.0-alpha.1 (2025-07-09)
 
 

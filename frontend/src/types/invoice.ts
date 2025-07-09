@@ -14,14 +14,14 @@ export interface InvoiceItem {
     description: string;
     quantity: number;
     unitPrice: number;
-    vatRate: number; // 20 for 20%
+    vatRate: number;
     order: number;
 }
 
 export interface Invoice {
     id: string;
-    number: string; // Ex: "INV-2025-0001"
-    title?: string; // Optional title from DTOs
+    number: string;
+    title?: string;
     quoteId?: string;
     clientId: string;
     companyId: string;
@@ -29,17 +29,17 @@ export interface Invoice {
     company: Company
     items: InvoiceItem[];
     status: InvoiceStatus;
-    createdAt: string; // ISO date string
-    updatedAt: string; // ISO date string
-    dueDate: string; // ISO date string
-    paidAt?: string; // ISO date string
-    paymentMethod?: string; // Ex: "Bank Transfer", "PayPal"
-    paymentDetails?: string; // Additional details for the payment method
+    createdAt: string;
+    updatedAt: string;
+    dueDate: string;
+    paidAt?: string;
+    paymentMethod?: string;
+    paymentDetails?: string;
     notes?: string;
     totalHT: number;
     totalVAT: number;
     totalTTC: number;
-    currency: string; // Currency code, e.g., "EUR", "USD"
+    currency: string;
     isActive: boolean;
 }
 
@@ -60,7 +60,7 @@ export interface RecurringInvoiceItem {
     description: string;
     quantity: number;
     unitPrice: number;
-    vatRate: number; // 20 for 20%
+    vatRate: number;
     order: number;
 }
 
@@ -71,19 +71,19 @@ export interface RecurringInvoice {
     companyId: string;
     company: Company;
     items: RecurringInvoiceItem[];
-    paymentMethod?: string; // Ex: "Bank Transfer", "PayPal", "Cash"
-    paymentDetails?: string; // Details for the payment method (e.g., bank account number)
+    paymentMethod?: string;
+    paymentDetails?: string;
     notes?: string;
     totalHT: number;
     totalVAT: number;
     totalTTC: number;
-    currency: string; // Currency code, e.g., "EUR", "USD"
-    frequency: RecurrenceFrequency; // Simplified recurrence frequency
-    count?: number; // Number of occurrences, null for infinite
-    until?: Date | string; // ISO date string for end date of the recurrence
-    autoSend?: boolean; // Auto-send generated invoices
-    nextInvoiceDate?: Date | string; // Date for the next invoice generation
-    lastInvoiceDate?: Date | string; // Date of the last generated invoice
-    createdAt: string; // ISO date string
-    updatedAt: string; // ISO date string
+    currency: string;
+    frequency: RecurrenceFrequency;
+    count?: number;
+    until?: Date | string;
+    autoSend?: boolean;
+    nextInvoiceDate?: Date | string;
+    lastInvoiceDate?: Date | string;
+    createdAt: string;
+    updatedAt: string;
 }

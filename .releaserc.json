@@ -1,59 +1,25 @@
 {
   "branches": [
-    {
-      "name": "main",
-      "plugins": [
-        "@semantic-release/commit-analyzer",
-        "@semantic-release/release-notes-generator",
-        "@semantic-release/changelog",
-        [
-          "@semantic-release/git",
-          {
-            "assets": ["CHANGELOG.md"],
-            "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-          }
-        ],
-        [
-          "@semantic-release/github",
-          {
-            "successComment": false,
-            "failComment": false,
-            "releasedLabels": false
-          }
-        ]
-      ]
-    },
+    "main",
     {
       "name": "beta",
-      "prerelease": true,
-      "plugins": [
-        "@semantic-release/commit-analyzer",
-        "@semantic-release/release-notes-generator",
-        [
-          "@semantic-release/github",
-          {
-            "successComment": false,
-            "failComment": false,
-            "releasedLabels": false
-          }
-        ]
-      ]
+      "prerelease": true
     },
     {
       "name": "alpha",
-      "prerelease": true,
-      "plugins": [
-        "@semantic-release/commit-analyzer",
-        "@semantic-release/release-notes-generator",
-        [
-          "@semantic-release/github",
-          {
-            "successComment": false,
-            "failComment": false,
-            "releasedLabels": false
-          }
-        ]
-      ]
+      "prerelease": true
     }
+  ],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/github",
+      {
+        "successComment": false,
+        "failComment": false,
+        "releasedLabels": false
+      }
+    ]
   ]
 } 

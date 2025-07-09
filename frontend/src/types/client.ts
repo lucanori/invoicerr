@@ -13,6 +13,6 @@ export interface Client {
     postalCode?: string;
     city?: string;
     country?: string;
-    currency?: string; // Assuming currency is a string, e.g., "USD", "EUR"
+    currency?: string;
     isActive?: boolean;
 }

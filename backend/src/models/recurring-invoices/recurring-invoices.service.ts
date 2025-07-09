@@ -34,7 +34,6 @@ export class RecurringInvoicesService {
     }
 
     async createRecurringInvoice(data: UpsertInvoicesDto) {
-        // Calculate totals
         let totalHT = 0;
         let totalVAT = 0;
         let totalTTC = 0;
@@ -92,7 +91,6 @@ export class RecurringInvoicesService {
     }
 
     async updateRecurringInvoice(id: string, data: UpsertInvoicesDto) {
-        // Calculate totals
         let totalHT = 0;
         let totalVAT = 0;
         let totalTTC = 0;
@@ -105,7 +103,6 @@ export class RecurringInvoicesService {
         }
         totalTTC = totalHT + totalVAT;
 
-        // Update recurring invoice
         const recurringInvoice = await this.prisma.recurringInvoice.update({
             where: { id },
             data: {
@@ -168,7 +165,6 @@ export class RecurringInvoicesService {
             throw new BadRequestException('Recurring invoice not found');
         }
 
-        // Supprimer en cascade les items puis la facture récurrente
         await this.prisma.recurringInvoiceItem.deleteMany({
             where: { recurringInvoiceId: id }
         });
@@ -207,7 +203,7 @@ export class RecurringInvoicesService {
                 nextDate.setFullYear(nextDate.getFullYear() + 1);
                 break;
             default:
-                nextDate.setMonth(nextDate.getMonth() + 1); // Default to monthly
+                nextDate.setMonth(nextDate.getMonth() + 1);
         }
 
         return nextDate;

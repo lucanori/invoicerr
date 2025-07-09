@@ -40,7 +40,7 @@ export default function Invoices() {
                 link.click()
                 document.body.removeChild(link)
                 URL.revokeObjectURL(url)
-                setDownloadInvoicePdf(null) // Reset after download
+                setDownloadInvoicePdf(null)
             })
         }
     }, [downloadInvoicePdf, pdf])

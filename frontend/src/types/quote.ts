@@ -11,7 +11,7 @@ export enum QuoteStatus {
 
 export interface Quote {
     id: string;
-    number: string; // Ex: "Q-2025-0001"
+    number: string;
     title?: string;
     clientId: string;
     client: Client;
@@ -24,13 +24,13 @@ export interface Quote {
     validUntil?: Date;
     signedAt?: Date;
     signatureSvg?: string;
-    notes?: string; // Additional notes for the quote
+    notes?: string;
     totalHT: number;
     totalVAT: number;
     totalTTC: number;
-    currency: string; // Currency code, e.g., "EUR", "USD"
-    paymentMethod?: string; // Ex: "Bank Transfer", "PayPal"
-    paymentDetails?: string; // Additional details for the payment method
+    currency: string;
+    paymentMethod?: string;
+    paymentDetails?: string;
     isActive: boolean;
 }
 
@@ -40,6 +40,6 @@ export interface QuoteItem {
     description: string;
     quantity: number;
     unitPrice: number;
-    vatRate: number; // 20 for 20%
-    order: number; // For sorting items in the quote PDF
+    vatRate: number;
+    order: number;
 }

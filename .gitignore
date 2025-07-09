@@ -25,3 +25,6 @@ dist-ssr
 backend/prisma/db.sqlite
 
 .task/
+*.env
+.env
+appdata/

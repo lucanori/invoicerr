@@ -1,0 +1,22 @@
+{
+  "name": "invoicerr",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Modern invoicing application for freelancers and small businesses",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lucanori/invoicerr.git"
+  },
+  "scripts": {
+    "dev": "echo 'Use docker compose up for development'",
+    "build": "echo 'Use docker buildx bake for building'",
+    "start": "echo 'Use docker compose up for running'"
+  },
+  "keywords": [
+    "invoicing",
+    "react",
+    "nestjs",
+    "docker"
+  ],
+  "license": "ISC"
+} 

@@ -3,7 +3,7 @@ import { Currency } from "@prisma/client";
 export class CreateInvoiceDto {
     clientId: string;
     quoteId?: string;
-    recurringInvoiceId?: string; // Ajout du champ pour la relation
+    recurringInvoiceId?: string;
     dueDate?: Date;
     currency?: Currency;
     notes: string;
@@ -29,7 +29,7 @@ export class EditInvoicesDto {
     paymentMethod?: string;
     paymentDetails?: string;
     items: {
-        id?: string; // Optional for new items
+        id?: string;
         description: string;
         quantity: number;
         unitPrice: number;

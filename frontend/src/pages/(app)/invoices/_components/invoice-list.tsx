@@ -74,7 +74,7 @@ export const InvoiceList = forwardRef<InvoiceListHandle, InvoiceListProps>(
                     link.click()
                     document.body.removeChild(link)
                     URL.revokeObjectURL(url)
-                    setDownloadTrigger(null) // Reset
+                    setDownloadTrigger(null)
                 })
             }
         }, [downloadTrigger, pdf])

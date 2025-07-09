@@ -1,7 +1,6 @@
 import { Currency } from "@prisma/client";
 
 export class CreateQuoteDto {
-    // number is auto generated
     title?: string;
     clientId: string;
     validUntil?: Date;
@@ -27,7 +26,7 @@ export class EditQuotesDto {
     paymentMethod?: string;
     paymentDetails?: string;
     items: {
-        id?: string; // Optional for new items
+        id?: string;
         description: string;
         quantity: number;
         unitPrice: number;

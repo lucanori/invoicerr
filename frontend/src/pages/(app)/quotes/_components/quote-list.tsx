@@ -69,7 +69,7 @@ export const QuoteList = forwardRef<QuoteListHandle, QuoteListProps>(
                     link.click()
                     document.body.removeChild(link)
                     URL.revokeObjectURL(url)
-                    setDownloadQuotePdf(null) // Reset after download
+                    setDownloadQuotePdf(null)
                 })
             }
         }, [downloadQuotePdf, pdf])

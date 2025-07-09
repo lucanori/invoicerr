@@ -1,0 +1,79 @@
+name: Generate Release Changelog
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  generate-release-changelog:
+    if: ${{ !github.event.release.prerelease }}
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Generate Release Changelog
+        id: generate_release
+        uses: mikepenz/release-changelog-builder-action@v5.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+        with:
+          configuration: ".github/configuration-release.json"
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          outputFile: CHANGELOG-release.md
+
+      - name: Update CHANGELOG.md
+        run: |
+          TAG=${{ github.event.release.tag_name }}
+          echo "Using release tag: $TAG"
+          
+          if [ ! -f CHANGELOG.md ]; then
+            echo "# Changelog" > CHANGELOG.md
+            echo "" >> CHANGELOG.md
+            echo "All notable changes to this project will be documented in this file." >> CHANGELOG.md
+            echo "" >> CHANGELOG.md
+          fi
+
+          echo "Updating CHANGELOG.md…"
+          
+          if grep -q "^## \[Unreleased\]" CHANGELOG.md; then
+            awk '/^## \[Unreleased\]/{flag=1} flag && /^---/{flag=0; next} !flag' CHANGELOG.md > CHANGELOG.cleaned
+          else
+            cp CHANGELOG.md CHANGELOG.cleaned
+          fi
+
+          awk '/^## \[v/{exit} {print}' CHANGELOG.cleaned > header.md
+          awk 'f{print} /^## \[v/{f=1; print}' CHANGELOG.cleaned > tail.md
+
+          echo "Combining updated changelog parts..."
+          cat header.md CHANGELOG-release.md > CHANGELOG.md.new
+          echo "" >> CHANGELOG.md.new
+          cat tail.md >> CHANGELOG.md.new
+
+          mv CHANGELOG.md.new CHANGELOG.md
+
+          rm -f CHANGELOG.cleaned header.md tail.md CHANGELOG-release.md
+
+          echo "Final CHANGELOG.md content:"
+          cat CHANGELOG.md
+
+      - name: Commit and Push Changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          if git diff --quiet CHANGELOG.md; then
+            echo "No changes to CHANGELOG.md, skipping commit"
+          else
+            git add CHANGELOG.md
+            git commit -m "docs: update CHANGELOG for release ${{ github.event.release.tag_name }}"
+            git push origin main
+            echo "Successfully updated CHANGELOG.md for release ${{ github.event.release.tag_name }}"
+          fi

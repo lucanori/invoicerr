@@ -1,7 +1,17 @@
 backend/.env
 backend/.env.example
 backend/package-lock.json
+backend/node_modules
 
 frontend/.env
 frontend/.env.example
 frontend/package-lock.json
+frontend/node_modules
+
+node_modules
+dist
+build
+.git
+.gitignore
+README.md
+*.md

@@ -1,5 +1,5 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { useGet, usePost, usePatch, useDelete } from "@/lib/utils";
+import { useGet, usePost } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
@@ -32,19 +32,20 @@ export function InvoicePaymentDialog({ invoice, onOpenChange, onUpdate }: Invoic
     const [showPaymentForm, setShowPaymentForm] = useState(false);
     const [editingPayments, setEditingPayments] = useState<Payment[]>([]);
 
+    const paymentsUrl = invoice ? `/api/payments/invoice/${invoice.id}` : "";
+    const summaryUrl = invoice ? `/api/payments/invoice/${invoice.id}/summary` : "";
+
     const { 
         data: payments, 
         mutate: mutatePayments 
-    } = useGet<Payment[]>(invoice ? `/api/payments/invoice/${invoice.id}` : null);
+    } = useGet<Payment[]>(paymentsUrl);
 
     const { 
         data: paymentSummary, 
         mutate: mutateSummary 
-    } = useGet<PaymentSummary>(invoice ? `/api/payments/invoice/${invoice.id}/summary` : null);
+    } = useGet<PaymentSummary>(summaryUrl);
 
     const { trigger: createPayment } = usePost("/api/payments");
-    const { trigger: updatePayment } = usePatch("");
-    const { trigger: deletePayment } = useDelete("");
 
     useEffect(() => {
         if (invoice && payments) {
@@ -65,13 +66,21 @@ export function InvoicePaymentDialog({ invoice, onOpenChange, onUpdate }: Invoic
             // Process each payment
             for (const payment of paymentData) {
                 if (payment.id) {
-                    // Update existing payment
-                    await updatePayment(`/api/payments/${payment.id}`, {
-                        amount: payment.amount,
-                        date: payment.date,
-                        method: payment.method,
-                        notes: payment.notes,
+                    // Update existing payment using fetch directly
+                    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL || ''}/api/payments/${payment.id}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+                        },
+                        body: JSON.stringify({
+                            amount: payment.amount,
+                            date: payment.date,
+                            method: payment.method,
+                            notes: payment.notes,
+                        })
                     });
+                    if (!res.ok) throw new Error('Failed to update payment');
                 } else {
                     // Create new payment
                     await createPayment({
@@ -90,7 +99,15 @@ export function InvoicePaymentDialog({ invoice, onOpenChange, onUpdate }: Invoic
             const idsToDelete = existingIds.filter(id => !submittedIds.includes(id));
 
             for (const id of idsToDelete) {
-                await deletePayment(`/api/payments/${id}`);
+                if (id) {
+                    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL || ''}/api/payments/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+                        }
+                    });
+                    if (!res.ok) throw new Error('Failed to delete payment');
+                }
             }
 
             // Refresh data
@@ -108,7 +125,14 @@ export function InvoicePaymentDialog({ invoice, onOpenChange, onUpdate }: Invoic
 
     const handleDeletePayment = async (paymentId: string) => {
         try {
-            await deletePayment(`/api/payments/${paymentId}`);
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL || ''}/api/payments/${paymentId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+                }
+            });
+            if (!res.ok) throw new Error('Failed to delete payment');
+            
             await mutatePayments();
             await mutateSummary();
             onUpdate?.();

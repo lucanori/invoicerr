@@ -1,0 +1,393 @@
+{
+    "clients": {
+        "header": {
+            "subtitle": "Gestisci i tuoi clienti",
+            "count": "{{count}} clienti {{found}}",
+            "found": "trovati"
+        },
+        "search": {
+            "placeholder": "Cerca clienti..."
+        },
+        "actions": {
+            "addNew": "Aggiungi Nuovo Cliente"
+        },
+        "stats": {
+            "total": "Clienti Totali",
+            "active": "Attivi",
+            "inactive": "Inattivi"
+        },
+        "emptyState": {
+            "noClients": "Nessun cliente ancora",
+            "noResults": "Nessun cliente trovato",
+            "startAdding": "Inizia creando il tuo primo cliente.",
+            "tryDifferentSearch": "Prova ad aggiustare i termini di ricerca."
+        },
+        "list": {
+            "title": "Tutti i Clienti",
+            "description": "Gestisci e visualizza tutti i tuoi clienti in un unico posto.",
+            "status": {
+                "active": "Attivo",
+                "inactive": "Inattivo"
+            },
+            "tooltips": {
+                "view": "Visualizza dettagli cliente",
+                "edit": "Modifica cliente",
+                "delete": "Elimina cliente"
+            }
+        },
+        "upsert": {
+            "title": {
+                "create": "Aggiungi Nuovo Cliente",
+                "edit": "Modifica Cliente"
+            },
+            "fields": {
+                "contactFirstname": {
+                    "label": "Nome",
+                    "placeholder": "Inserisci il nome"
+                },
+                "contactLastname": {
+                    "label": "Cognome",
+                    "placeholder": "Inserisci il cognome"
+                },
+                "name": {
+                    "label": "Ragione Sociale",
+                    "placeholder": "Inserisci la ragione sociale"
+                },
+                "description": {
+                    "label": "Descrizione",
+                    "placeholder": "Inserisci la descrizione dell'azienda"
+                },
+                "legalId": {
+                    "label": "Codice Fiscale",
+                    "placeholder": "Inserisci il codice fiscale"
+                },
+                "vat": {
+                    "label": "Partita IVA",
+                    "placeholder": "Inserisci la partita IVA (es. IT12345678901)"
+                },
+                "currency": {
+                    "label": "Valuta"
+                },
+                "foundedAt": {
+                    "label": "Data Fondazione",
+                    "placeholder": "Seleziona data di fondazione"
+                },
+                "contactEmail": {
+                    "label": "Email",
+                    "placeholder": "Inserisci l'indirizzo email"
+                },
+                "contactPhone": {
+                    "label": "Telefono",
+                    "placeholder": "Inserisci il numero di telefono"
+                },
+                "address": {
+                    "label": "Indirizzo",
+                    "placeholder": "Inserisci l'indirizzo"
+                },
+                "postalCode": {
+                    "label": "CAP",
+                    "placeholder": "Inserisci il CAP"
+                },
+                "city": {
+                    "label": "Città",
+                    "placeholder": "Inserisci la città"
+                },
+                "country": {
+                    "label": "Paese",
+                    "placeholder": "Inserisci il paese"
+                }
+            },
+            "validation": {
+                "name": {
+                    "required": "La ragione sociale è richiesta"
+                },
+                "description": {
+                    "required": "La descrizione è richiesta",
+                    "maxLength": "La descrizione deve essere inferiore a 500 caratteri"
+                },
+                "legalId": {
+                    "required": "Il codice fiscale è richiesto",
+                    "empty": "Il codice fiscale non può essere vuoto",
+                    "maxLength": "Il codice fiscale deve essere inferiore a 50 caratteri"
+                },
+                "vat": {
+                    "required": "La partita IVA è richiesta",
+                    "empty": "La partita IVA non può essere vuota",
+                    "maxLength": "La partita IVA deve essere inferiore a 15 caratteri",
+                    "format": "Il formato della partita IVA non è valido (es. IT12345678901)"
+                },
+                "foundedAt": {
+                    "future": "La data di fondazione non può essere nel futuro"
+                },
+                "contactFirstname": {
+                    "required": "Il nome è richiesto"
+                },
+                "contactLastname": {
+                    "required": "Il cognome è richiesto"
+                },
+                "contactPhone": {
+                    "minLength": "Il numero di telefono deve essere almeno 8 caratteri",
+                    "format": "Il formato del numero di telefono non è valido"
+                },
+                "contactEmail": {
+                    "required": "L'email è richiesta",
+                    "format": "Il formato dell'email non è valido"
+                },
+                "address": {
+                    "required": "L'indirizzo è richiesto"
+                },
+                "postalCode": {
+                    "format": "Il formato del CAP non è valido"
+                },
+                "city": {
+                    "required": "La città è richiesta"
+                },
+                "country": {
+                    "required": "Il paese è richiesto"
+                }
+            },
+            "actions": {
+                "cancel": "Annulla",
+                "create": "Crea Cliente",
+                "save": "Salva Modifiche"
+            }
+        },
+        "view": {
+            "title": "Dettagli Cliente",
+            "description": "Visualizza tutte le informazioni rilevanti su questo cliente.",
+            "fields": {
+                "companyName": "Ragione Sociale",
+                "contactPerson": "Persona di Contatto",
+                "email": "Email",
+                "phone": "Telefono",
+                "address": "Indirizzo",
+                "postalCode": "CAP",
+                "city": "Città",
+                "country": "Paese"
+            }
+        },
+        "delete": {
+            "title": "Elimina Cliente",
+            "description": "Sei sicuro di voler eliminare questo cliente? Questa azione non può essere annullata.",
+            "actions": {
+                "cancel": "Annulla",
+                "delete": "Elimina Cliente"
+            }
+        }
+    },
+    "quotes": {
+        "header": {
+            "subtitle": "Gestisci i tuoi preventivi",
+            "count": "{{count}} preventivi {{found}}",
+            "found": "trovati"
+        },
+        "search": {
+            "placeholder": "Cerca preventivi..."
+        },
+        "actions": {
+            "addNew": "Aggiungi Nuovo Preventivo"
+        },
+        "stats": {
+            "total": "Preventivi Totali",
+            "draft": "Bozze",
+            "signed": "Firmati"
+        },
+        "emptyState": {
+            "noQuotes": "Nessun preventivo ancora",
+            "noResults": "Nessun preventivo trovato",
+            "startAdding": "Inizia creando il tuo primo preventivo.",
+            "tryDifferentSearch": "Prova ad aggiustare i termini di ricerca."
+        },
+        "list": {
+            "title": "Tutti i Preventivi",
+            "description": "Gestisci e visualizza tutti i tuoi preventivi in un unico posto.",
+            "status": {
+                "draft": "Bozza",
+                "sent": "Inviato",
+                "expired": "Scaduto",
+                "signed": "Firmato"
+            }
+        }
+    },
+    "invoices": {
+        "header": {
+            "subtitle": "Gestisci le tue fatture",
+            "count": "{{count}} fatture {{found}}",
+            "found": "trovate"
+        },
+        "search": {
+            "placeholder": "Cerca fatture..."
+        },
+        "actions": {
+            "addNew": "Aggiungi Nuova Fattura"
+        },
+        "stats": {
+            "total": "Fatture Totali",
+            "sent": "Inviate",
+            "paid": "Pagate"
+        },
+        "emptyState": {
+            "noInvoices": "Nessuna fattura ancora",
+            "noResults": "Nessuna fattura trovata",
+            "startAdding": "Inizia creando la tua prima fattura.",
+            "tryDifferentSearch": "Prova ad aggiustare i termini di ricerca."
+        },
+        "list": {
+            "title": "Tutte le Fatture",
+            "description": "Gestisci e visualizza tutte le tue fatture in un unico posto.",
+            "status": {
+                "sent": "Inviata",
+                "unpaid": "Non Pagata",
+                "partiallyPaid": "Parzialmente Pagata",
+                "overdue": "Scaduta",
+                "paid": "Pagata"
+            }
+        }
+    },
+    "payments": {
+        "progress": {
+            "paid": "Pagato",
+            "remaining": "Rimanente"
+        },
+        "form": {
+            "summary": {
+                "totalAmount": "Importo Totale",
+                "totalPayments": "Pagamenti Totali",
+                "remaining": "Rimanente",
+                "overpayment": "Attenzione: I pagamenti totali superano l'importo della fattura"
+            },
+            "payments": {
+                "label": "Pagamenti"
+            },
+            "amount": {
+                "placeholder": "Importo",
+                "errors": {
+                    "required": "L'importo è richiesto",
+                    "min": "L'importo deve essere positivo",
+                    "invalid": "Importo non valido"
+                }
+            },
+            "date": {
+                "placeholder": "Data pagamento",
+                "errors": {
+                    "required": "La data è richiesta"
+                }
+            },
+            "method": {
+                "placeholder": "Metodo di pagamento"
+            },
+            "notes": {
+                "placeholder": "Note"
+            },
+            "addPayment": "Aggiungi Pagamento",
+            "actions": {
+                "cancel": "Annulla",
+                "save": "Salva Pagamenti"
+            }
+        },
+        "dialog": {
+            "title": "Gestisci Pagamenti",
+            "summary": {
+                "title": "Riepilogo Pagamenti"
+            },
+            "form": {
+                "title": "Gestisci Pagamenti"
+            },
+            "history": {
+                "title": "Cronologia Pagamenti",
+                "empty": "Nessun pagamento ancora",
+                "emptyDescription": "Aggiungi pagamenti per tracciare i pagamenti parziali per questa fattura"
+            },
+            "actions": {
+                "addPayment": "Aggiungi Pagamento"
+            }
+        },
+        "view": {
+            "summary": {
+                "title": "Stato Pagamento"
+            },
+            "history": {
+                "title": "Cronologia Pagamenti"
+            },
+            "actions": {
+                "managePayments": "Gestisci Pagamenti",
+                "addPayment": "Aggiungi Pagamento"
+            }
+        },
+        "messages": {
+            "saveSuccess": "Pagamenti salvati con successo",
+            "saveError": "Errore nel salvare i pagamenti",
+            "deleteSuccess": "Pagamento eliminato con successo",
+            "deleteError": "Errore nell'eliminare il pagamento"
+        }
+    },
+    "recurringInvoices": {
+        "frequency": {
+            "weekly": "Ogni settimana",
+            "biweekly": "Ogni 2 settimane",
+            "monthly": "Ogni mese",
+            "bimonthly": "Ogni 2 mesi",
+            "quarterly": "Ogni 3 mesi",
+            "quadmonthly": "Ogni 4 mesi",
+            "semiannually": "Ogni 6 mesi",
+            "annually": "Ogni anno"
+        },
+        "list": {
+            "title": "Fatture Ricorrenti",
+            "description": "Gestisci le tue fatture ricorrenti e automatizza la fatturazione.",
+            "actions": {
+                "addNew": "Aggiungi Nuova Fattura Ricorrente"
+            }
+        },
+        "emptyState": {
+            "noInvoices": "Nessuna fattura ricorrente ancora",
+            "startAdding": "Inizia creando la tua prima fattura ricorrente."
+        },
+        "actions": {
+            "addNew": "Aggiungi Nuova Fattura Ricorrente"
+        }
+    },
+    "dashboard": {
+        "title": "Dashboard",
+        "welcomeMessage": "Bentornato, {{firstname}}!",
+        "revenue": {
+            "title": "Panoramica Fatturato",
+            "description": "Monitora le tue performance finanziarie nel tempo",
+            "thisMonth": "Questo Mese",
+            "thisYear": "Quest'Anno",
+            "chartLabel": "Fatturato"
+        },
+        "quotes": {
+            "title": "Panoramica Preventivi",
+            "description": "Monitora la pipeline dei preventivi e i tassi di conversione",
+            "stats": {
+                "total": "Preventivi Totali",
+                "draft": "Bozze",
+                "sent": "Inviati",
+                "signed": "Firmati",
+                "expired": "Scaduti"
+            },
+            "latestTitle": "Preventivi Recenti",
+            "noRecent": "Nessun preventivo recente"
+        },
+        "invoices": {
+            "title": "Panoramica Fatture",
+            "description": "Tieni traccia della fatturazione e dei pagamenti",
+            "stats": {
+                "total": "Fatture Totali",
+                "unpaid": "Non Pagate",
+                "sent": "Inviate",
+                "paid": "Pagate",
+                "overdue": "Scadute"
+            },
+            "latestTitle": "Fatture Recenti",
+            "noRecent": "Nessuna fattura recente"
+        },
+        "clients": {
+            "title": "Panoramica Clienti",
+            "stats": {
+                "total": "Clienti Totali"
+            }
+        }
+    }
+} 

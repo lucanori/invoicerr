@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button"
 import { DatePicker } from "@/components/date-picker"
 import { Input } from "@/components/ui/input"
 import type { Payment } from "@/types"
-import { Textarea } from "@/components/ui/textarea"
 import { useTranslation } from "react-i18next"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -71,7 +70,6 @@ interface PaymentFormData {
 }
 
 export function PartialPaymentForm({ 
-    invoiceId, 
     totalAmount, 
     currency, 
     existingPayments = [], 

@@ -22,15 +22,18 @@ export function InvoiceViewDialog({ invoice, onOpenChange }: InvoiceViewDialogPr
     const { t, i18n } = useTranslation()
     const [paymentDialog, setPaymentDialog] = useState<Invoice | null>(null)
 
+    const paymentsUrl = invoice ? `/api/payments/invoice/${invoice.id}` : "";
+    const summaryUrl = invoice ? `/api/payments/invoice/${invoice.id}/summary` : "";
+
     const { 
         data: payments, 
         mutate: mutatePayments 
-    } = useGet<Payment[]>(invoice ? `/api/payments/invoice/${invoice.id}` : null)
+    } = useGet<Payment[]>(paymentsUrl)
 
     const { 
         data: paymentSummary, 
         mutate: mutateSummary 
-    } = useGet<PaymentSummary>(invoice ? `/api/payments/invoice/${invoice.id}/summary` : null)
+    } = useGet<PaymentSummary>(summaryUrl)
 
     if (!invoice) return null
 

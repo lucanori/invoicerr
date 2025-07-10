@@ -46,14 +46,17 @@ RUN mkdir -p /usr/share/nginx/html /usr/share/nginx/backend \
     && cp -r /usr/src/app/backend/dist/* /usr/share/nginx/backend/ \
     && cp -r /usr/src/app/backend/node_modules /usr/share/nginx/backend/ \
     && cp /usr/src/app/backend/package*.json /usr/share/nginx/backend/ \
-    && cp -r /usr/src/app/backend/prisma /usr/share/nginx/ \
+    && cp -r /usr/src/app/backend/prisma /usr/share/nginx/backend/ \
     && mkdir -p /usr/share/nginx/storage/temp /usr/share/nginx/storage/logs \
     && chown -R nobody:nogroup /usr/share/nginx/storage
 
 COPY entrypoint.sh /usr/share/nginx/entrypoint.sh
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 
-RUN chmod +x /usr/share/nginx/entrypoint.sh
+RUN chmod +x /usr/share/nginx/entrypoint.sh \
+    && mkdir -p /var/log/nginx /.npm \
+    && chown -R nobody:nogroup /var/log/nginx /.npm \
+    && chown -R nobody:nogroup /usr/share/nginx
 
 USER nobody:nogroup
 

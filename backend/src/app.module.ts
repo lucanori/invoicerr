@@ -7,6 +7,7 @@ import { DangerModule } from './models/danger/danger.module';
 import { DashboardModule } from './models/dashboard/dashboard.module';
 import { InvoicesModule } from './models/invoices/invoices.module';
 import { Module } from '@nestjs/common';
+import { PaymentsModule } from './models/payments/payments.module';
 import { PrismaService } from './prisma/prisma.service';
 import { QuotesModule } from './models/quotes/quotes.module';
 import { SignaturesModule } from './models/signatures/signatures.module';
@@ -21,6 +22,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     ClientsModule,
     QuotesModule,
     InvoicesModule,
+    PaymentsModule,
     DashboardModule,
     SignaturesModule,
     DangerModule,

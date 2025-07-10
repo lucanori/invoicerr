@@ -18,6 +18,7 @@ interface DashboardData {
         unpaid: number
         sent: number
         paid: number
+        partiallyPaid: number
         overdue: number
         latests: Invoice[]
     }
@@ -126,6 +127,7 @@ export class DashboardService {
                 unpaid: invoices.find(i => i.status === 'UNPAID')?._count || 0,
                 sent: invoices.find(i => i.status === 'SENT')?._count || 0,
                 paid: invoices.find(i => i.status === 'PAID')?._count || 0,
+                partiallyPaid: invoices.find(i => i.status === 'PARTIALLY_PAID')?._count || 0,
                 overdue: invoices.find(i => i.status === 'OVERDUE')?._count || 0,
                 latests: latestInvoices,
             },
@@ -198,46 +200,74 @@ export class DashboardService {
         const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
         const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
+        // Get all invoices for the month with their payments
         const invoices = await this.prisma.invoice.findMany({
             where: {
                 createdAt: {
                     gte: startOfMonth,
                     lte: endOfMonth,
                 },
-                status: 'PAID',
+                isActive: true,
             },
-            include: { company: true }
+            include: { 
+                company: true,
+                payments: true
+            }
         });
 
-        const convertedAmounts = await Promise.all(
-            invoices.map(async (invoice) =>
-                await this.convertToMainCurrency(invoice.totalTTC, invoice.currency, invoice.company.currency)
-            )
-        );
-        return convertedAmounts.reduce((total, amount) => total + amount, 0);
+        let totalRevenue = 0;
+
+        for (const invoice of invoices) {
+            // Calculate total payments for this invoice
+            const totalPaid = invoice.payments.reduce((sum, payment) => sum + payment.amount, 0);
+            
+            // Convert to main currency and add to total
+            const convertedAmount = await this.convertToMainCurrency(
+                totalPaid, 
+                invoice.currency, 
+                invoice.company.currency
+            );
+            totalRevenue += convertedAmount;
+        }
+
+        return totalRevenue;
     }
 
     async getYearlyRevenue(date: Date): Promise<number> {
         const startOfYear = new Date(date.getFullYear(), 0, 1);
         const endOfYear = new Date(date.getFullYear() + 1, 0, 0);
 
+        // Get all invoices for the year with their payments
         const invoices = await this.prisma.invoice.findMany({
             where: {
                 createdAt: {
                     gte: startOfYear,
                     lte: endOfYear,
                 },
-                status: 'PAID',
+                isActive: true,
             },
-            include: { company: true }
+            include: { 
+                company: true,
+                payments: true
+            }
         });
 
-        const convertedAmounts = await Promise.all(
-            invoices.map(async (invoice) =>
-                await this.convertToMainCurrency(invoice.totalTTC, invoice.currency, invoice.company.currency)
-            )
-        );
-        return convertedAmounts.reduce((total, amount) => total + amount, 0);
+        let totalRevenue = 0;
+
+        for (const invoice of invoices) {
+            // Calculate total payments for this invoice
+            const totalPaid = invoice.payments.reduce((sum, payment) => sum + payment.amount, 0);
+            
+            // Convert to main currency and add to total
+            const convertedAmount = await this.convertToMainCurrency(
+                totalPaid, 
+                invoice.currency, 
+                invoice.company.currency
+            );
+            totalRevenue += convertedAmount;
+        }
+
+        return totalRevenue;
     }
 
     calculateChangePercent(current: number, previous: number): number {

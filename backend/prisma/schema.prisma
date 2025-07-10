@@ -345,6 +345,7 @@ model QuoteItem {
 enum InvoiceStatus {
   PAID
   UNPAID
+  PARTIALLY_PAID
   OVERDUE
   SENT
 }
@@ -408,6 +409,7 @@ model Invoice {
   company            Company           @relation(fields: [companyId], references: [id]) // Company issuing the invoice
   companyId          String
   items              InvoiceItem[]
+  payments           Payment[]         // Multiple payments for partial payment support
   status             InvoiceStatus     @default(UNPAID)
   createdAt          DateTime          @default(now())
   updatedAt          DateTime          @updatedAt
@@ -432,6 +434,18 @@ model InvoiceItem {
   unitPrice   Float
   vatRate     Float // 20 for 20%
   order       Int
+}
+
+model Payment {
+  id          String   @id @default(uuid())
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  invoiceId   String
+  amount      Float    // Payment amount
+  date        DateTime @default(now()) // When the payment was made
+  method      String?  // Payment method (e.g., "Bank Transfer", "Cash", "Credit Card")
+  notes       String?  // Additional notes about the payment
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Signature {

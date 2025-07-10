@@ -9,6 +9,7 @@ export class UpsertInvoicesDto {
     until?: Date;
     autoSend?: boolean;
     currency?: string;
+    startDate?: Date; // When the recurring invoice should start generating
     items: {
         id?: string;
         description: string;

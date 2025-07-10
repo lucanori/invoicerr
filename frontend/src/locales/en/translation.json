@@ -378,6 +378,7 @@
             "status": {
                 "sent": "Sent",
                 "unpaid": "Unpaid",
+                "partiallyPaid": "Partially Paid",
                 "overdue": "Overdue",
                 "paid": "Paid"
             },
@@ -396,6 +397,10 @@
                 "downloadPdf": "Download PDF",
                 "edit": "Edit invoice",
                 "markAsPaid": "Mark as paid",
+                "confirmMarkAsPaid": "Confirm mark as paid",
+                "cancelMarkAsPaid": "Cancel",
+                "managePayments": "Manage payments",
+                "sendByEmail": "Send by email",
                 "delete": "Delete invoice"
             },
             "actions": {
@@ -528,6 +533,83 @@
         },
         "pdf": {
             "title": "Invoice {{number}} - PDF"
+        }
+    },
+    "payments": {
+        "progress": {
+            "paid": "Paid",
+            "remaining": "Remaining"
+        },
+        "form": {
+            "summary": {
+                "totalAmount": "Total Amount",
+                "totalPayments": "Total Payments",
+                "remaining": "Remaining",
+                "overpayment": "Warning: Total payments exceed invoice amount"
+            },
+            "payments": {
+                "label": "Payments"
+            },
+            "amount": {
+                "placeholder": "Amount",
+                "errors": {
+                    "required": "Amount is required",
+                    "min": "Amount must be positive",
+                    "invalid": "Invalid amount"
+                }
+            },
+            "date": {
+                "placeholder": "Payment date",
+                "errors": {
+                    "required": "Date is required"
+                }
+            },
+            "method": {
+                "placeholder": "Payment method"
+            },
+            "notes": {
+                "placeholder": "Notes"
+            },
+            "addPayment": "Add Payment",
+            "actions": {
+                "cancel": "Cancel",
+                "save": "Save Payments"
+            }
+        },
+        "dialog": {
+            "title": "Manage Payments",
+            "summary": {
+                "title": "Payment Summary"
+            },
+            "form": {
+                "title": "Manage Payments"
+            },
+            "history": {
+                "title": "Payment History",
+                "empty": "No payments yet",
+                "emptyDescription": "Add payments to track partial payments for this invoice"
+            },
+            "actions": {
+                "addPayment": "Add Payment"
+            }
+        },
+        "view": {
+            "summary": {
+                "title": "Payment Status"
+            },
+            "history": {
+                "title": "Payment History"
+            },
+            "actions": {
+                "managePayments": "Manage Payments",
+                "addPayment": "Add Payment"
+            }
+        },
+        "messages": {
+            "saveSuccess": "Payments saved successfully",
+            "saveError": "Failed to save payments",
+            "deleteSuccess": "Payment deleted successfully",
+            "deleteError": "Failed to delete payment"
         }
     },
     "recurringInvoices": {

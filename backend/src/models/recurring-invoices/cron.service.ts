@@ -140,8 +140,37 @@ export class RecurringInvoicesCronService {
                 nextDate.setMonth(nextDate.getMonth() + 1);
         }
 
-        while (nextDate.getDay() !== 1 || nextDate <= from) {
-            nextDate.setDate(nextDate.getDate() + 1);
+        // Ensure the next date is in the future (no Monday constraint)
+        while (nextDate <= from) {
+            // If the calculated date is not in the future, add one more interval
+            switch (frequency) {
+                case 'WEEKLY':
+                    nextDate.setDate(nextDate.getDate() + 7);
+                    break;
+                case 'BIWEEKLY':
+                    nextDate.setDate(nextDate.getDate() + 14);
+                    break;
+                case 'MONTHLY':
+                    nextDate.setMonth(nextDate.getMonth() + 1);
+                    break;
+                case 'BIMONTHLY':
+                    nextDate.setMonth(nextDate.getMonth() + 2);
+                    break;
+                case 'QUARTERLY':
+                    nextDate.setMonth(nextDate.getMonth() + 3);
+                    break;
+                case 'QUADMONTHLY':
+                    nextDate.setMonth(nextDate.getMonth() + 4);
+                    break;
+                case 'SEMIANNUALLY':
+                    nextDate.setMonth(nextDate.getMonth() + 6);
+                    break;
+                case 'ANNUALLY':
+                    nextDate.setFullYear(nextDate.getFullYear() + 1);
+                    break;
+                default:
+                    nextDate.setMonth(nextDate.getMonth() + 1);
+            }
         }
 
         return nextDate;

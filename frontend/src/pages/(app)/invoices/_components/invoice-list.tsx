@@ -1,4 +1,4 @@
-import { Banknote, Download, Edit, Eye, Mail, Plus, Receipt, Trash2 } from "lucide-react"
+import { Banknote, Download, Edit, Eye, Mail, Plus, Receipt, Trash2, Check, X, CreditCard } from "lucide-react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react"
@@ -11,6 +11,8 @@ import { InvoiceDeleteDialog } from "./invoice-delete"
 import { InvoicePdfModal } from "./invoice-pdf-view"
 import { InvoiceUpsert } from "./invoice-upsert"
 import { InvoiceViewDialog } from "./invoice-view"
+import { InvoicePaymentDialog } from "../../../../components/invoice-payment-dialog"
+import { PaymentProgress } from "../../../../components/payment-progress"
 import type React from "react"
 import { toast } from "sonner"
 import { useTranslation } from "react-i18next"
@@ -38,7 +40,7 @@ export const InvoiceList = forwardRef<InvoiceListHandle, InvoiceListProps>(
         ref,
     ) => {
         const { t } = useTranslation()
-        const { trigger: triggerMarkAsPaid } = usePost(`/api/invoices/mark-as-paid`)
+        const { trigger: triggerMarkAsPaid } = usePost(`/api/payments/invoice`)
         const { trigger: triggerSendInvoiceByEmail } = usePost(`/api/invoices/send`)
 
         const [createInvoiceDialog, setCreateInvoiceDialog] = useState<boolean>(false)
@@ -46,6 +48,8 @@ export const InvoiceList = forwardRef<InvoiceListHandle, InvoiceListProps>(
         const [viewInvoiceDialog, setViewInvoiceDialog] = useState<Invoice | null>(null)
         const [viewInvoicePdfDialog, setViewInvoicePdfDialog] = useState<Invoice | null>(null)
         const [deleteInvoiceDialog, setDeleteInvoiceDialog] = useState<Invoice | null>(null)
+        const [paymentDialog, setPaymentDialog] = useState<Invoice | null>(null)
+        const [confirmingPayment, setConfirmingPayment] = useState<string | null>(null)
         const [downloadTrigger, setDownloadTrigger] = useState<{
             invoice: Invoice
             format: string
@@ -95,16 +99,30 @@ export const InvoiceList = forwardRef<InvoiceListHandle, InvoiceListProps>(
             setDeleteInvoiceDialog(invoice)
         }
 
-        function handleMarkAsPaid(invoiceId: string) {
-            triggerMarkAsPaid({ invoiceId })
+        function handlePayments(invoice: Invoice) {
+            setPaymentDialog(invoice)
+        }
+
+        function handleMarkAsPaidClick(invoiceId: string) {
+            setConfirmingPayment(invoiceId)
+        }
+
+        function handleConfirmMarkAsPaid(invoiceId: string) {
+            triggerMarkAsPaid(`${invoiceId}/mark-fully-paid`, {})
                 .then(() => {
                     toast.success(t("invoices.list.messages.markAsPaidSuccess"))
                     mutate()
+                    setConfirmingPayment(null)
                 })
                 .catch((error) => {
                     console.error("Error marking invoice as paid:", error)
                     toast.error(t("invoices.list.messages.markAsPaidError"))
+                    setConfirmingPayment(null)
                 })
+        }
+
+        function handleCancelMarkAsPaid() {
+            setConfirmingPayment(null)
         }
 
         function handleDownloadPdf({ invoice, format }: { invoice: Invoice; format: string }) {
@@ -117,6 +135,8 @@ export const InvoiceList = forwardRef<InvoiceListHandle, InvoiceListProps>(
                     return "bg-yellow-100 text-yellow-800"
                 case "UNPAID":
                     return "bg-blue-100 text-blue-800"
+                case "PARTIALLY_PAID":
+                    return "bg-purple-100 text-purple-800"
                 case "OVERDUE":
                     return "bg-red-100 text-red-800"
                 case "PAID":
@@ -139,6 +159,10 @@ export const InvoiceList = forwardRef<InvoiceListHandle, InvoiceListProps>(
                     console.error("Error sending invoice by email:", error)
                     toast.error(t("invoices.list.messages.sendByEmailError"))
                 })
+        }
+
+        const needsPaymentActions = (invoice: Invoice) => {
+            return invoice.status !== "PAID"
         }
 
         return (
@@ -176,7 +200,7 @@ export const InvoiceList = forwardRef<InvoiceListHandle, InvoiceListProps>(
                                                 <div className="p-2 bg-blue-100 rounded-lg mb-4 md:mb-0 w-fit h-fit">
                                                     <Receipt className="h-5 w-5 text-blue-600" />
                                                 </div>
-                                                <div className="flex-1">
+                                                <div className="flex-1 space-y-3">
                                                     <div className="flex flex-wrap items-center gap-2">
                                                         <h3 className="font-medium text-foreground break-words">
                                                             {t("invoices.list.item.title", {
@@ -190,6 +214,14 @@ export const InvoiceList = forwardRef<InvoiceListHandle, InvoiceListProps>(
                                                             {getStatusLabel(invoice.status)}
                                                         </span>
                                                     </div>
+                                                    
+                                                    {/* Payment Progress for partially paid invoices */}
+                                                    {(invoice.status === 'PARTIALLY_PAID' || invoice.status === 'UNPAID') && (
+                                                        <div className="max-w-md">
+                                                            <PaymentProgress invoice={invoice} compact={true} />
+                                                        </div>
+                                                    )}
+                                                    
                                                     <div className="mt-2 flex flex-col gap-2 text-sm text-muted-foreground">
                                                         <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-1">
                                                             <span>
@@ -279,7 +311,7 @@ export const InvoiceList = forwardRef<InvoiceListHandle, InvoiceListProps>(
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
 
-                                                {invoice.status !== "PAID" && (
+                                                {needsPaymentActions(invoice) && (
                                                     <Button
                                                         tooltip={t("invoices.list.tooltips.edit")}
                                                         variant="ghost"
@@ -291,7 +323,7 @@ export const InvoiceList = forwardRef<InvoiceListHandle, InvoiceListProps>(
                                                     </Button>
                                                 )}
 
-                                                {invoice.status !== "PAID" && (
+                                                {needsPaymentActions(invoice) && (
                                                     <Button
                                                         tooltip={t("invoices.list.tooltips.sendByEmail")}
                                                         variant="ghost"
@@ -303,19 +335,56 @@ export const InvoiceList = forwardRef<InvoiceListHandle, InvoiceListProps>(
                                                     </Button>
                                                 )}
 
-                                                {invoice.status !== "PAID" && (
+                                                {/* Partial Payments Button */}
+                                                {needsPaymentActions(invoice) && (
                                                     <Button
-                                                        tooltip={t("invoices.list.tooltips.markAsPaid")}
+                                                        tooltip={t("invoices.list.tooltips.managePayments")}
                                                         variant="ghost"
                                                         size="icon"
-                                                        onClick={() => handleMarkAsPaid(invoice.id)}
-                                                        className="text-gray-600 hover:text-blue-600"
+                                                        onClick={() => handlePayments(invoice)}
+                                                        className="text-gray-600 hover:text-indigo-600"
                                                     >
-                                                        <Banknote className="h-4 w-4" />
+                                                        <CreditCard className="h-4 w-4" />
                                                     </Button>
                                                 )}
 
-                                                {invoice.status !== "PAID" && invoice.status !== "OVERDUE" && (
+                                                {/* Mark as Paid - with confirmation */}
+                                                {needsPaymentActions(invoice) && (
+                                                    confirmingPayment === invoice.id ? (
+                                                        <>
+                                                            <Button
+                                                                tooltip={t("invoices.list.tooltips.confirmMarkAsPaid")}
+                                                                variant="ghost"
+                                                                size="icon"
+                                                                onClick={() => handleConfirmMarkAsPaid(invoice.id)}
+                                                                className="text-gray-600 hover:text-green-600"
+                                                            >
+                                                                <Check className="h-4 w-4" />
+                                                            </Button>
+                                                            <Button
+                                                                tooltip={t("invoices.list.tooltips.cancelMarkAsPaid")}
+                                                                variant="ghost"
+                                                                size="icon"
+                                                                onClick={handleCancelMarkAsPaid}
+                                                                className="text-gray-600 hover:text-red-600"
+                                                            >
+                                                                <X className="h-4 w-4" />
+                                                            </Button>
+                                                        </>
+                                                    ) : (
+                                                        <Button
+                                                            tooltip={t("invoices.list.tooltips.markAsPaid")}
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            onClick={() => handleMarkAsPaidClick(invoice.id)}
+                                                            className="text-gray-600 hover:text-blue-600"
+                                                        >
+                                                            <Banknote className="h-4 w-4" />
+                                                        </Button>
+                                                    )
+                                                )}
+
+                                                {needsPaymentActions(invoice) && invoice.status !== "OVERDUE" && (
                                                     <Button
                                                         tooltip={t("invoices.list.tooltips.delete")}
                                                         variant="ghost"
@@ -380,6 +449,14 @@ export const InvoiceList = forwardRef<InvoiceListHandle, InvoiceListProps>(
                         if (!open) setDeleteInvoiceDialog(null)
                         mutate()
                     }}
+                />
+
+                <InvoicePaymentDialog
+                    invoice={paymentDialog}
+                    onOpenChange={(open: boolean) => {
+                        if (!open) setPaymentDialog(null)
+                    }}
+                    onUpdate={mutate}
                 />
             </>
         )

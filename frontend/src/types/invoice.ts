@@ -1,16 +1,17 @@
 import type { Client } from "./client";
 import type { Company } from "./company";
+import type { Payment, PaymentSummary } from "./payment";
 
 export enum InvoiceStatus {
     PAID = 'PAID',
     UNPAID = 'UNPAID',
+    PARTIALLY_PAID = 'PARTIALLY_PAID',
     OVERDUE = 'OVERDUE',
     SENT = 'SENT'
 }
 
 export interface InvoiceItem {
     id: string;
-    invoiceId: string;
     description: string;
     quantity: number;
     unitPrice: number;
@@ -28,6 +29,8 @@ export interface Invoice {
     client: Client
     company: Company
     items: InvoiceItem[];
+    payments?: Payment[]; // Optional for when payments are not loaded
+    paymentSummary?: PaymentSummary; // Optional payment summary
     status: InvoiceStatus;
     createdAt: string;
     updatedAt: string;
@@ -43,9 +46,31 @@ export interface Invoice {
     isActive: boolean;
 }
 
+export interface CreateInvoiceDto {
+    quoteId?: string;
+    clientId: string;
+    dueDate?: Date;
+    notes?: string;
+    paymentMethod?: string;
+    paymentDetails?: string;
+    currency?: string;
+    items: {
+        id?: string;
+        description: string;
+        quantity: number;
+        unitPrice: number;
+        vatRate: number;
+        order: number;
+    }[];
+}
+
+export interface EditInvoiceDto extends CreateInvoiceDto {
+    id: string;
+}
+
 export enum RecurrenceFrequency {
     WEEKLY = 'WEEKLY',
-    BIWEEKLY = 'BIWEEKLY',
+    BIWEEKLY = 'BIWEEKLY', 
     MONTHLY = 'MONTHLY',
     BIMONTHLY = 'BIMONTHLY',
     QUARTERLY = 'QUARTERLY',
@@ -56,7 +81,6 @@ export enum RecurrenceFrequency {
 
 export interface RecurringInvoiceItem {
     id: string;
-    recurringInvoiceId: string;
     description: string;
     quantity: number;
     unitPrice: number;

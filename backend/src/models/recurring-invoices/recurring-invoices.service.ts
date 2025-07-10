@@ -46,13 +46,10 @@ export class RecurringInvoicesService {
         }
         totalTTC = totalHT + totalVAT;
 
-        const today = new Date();
-        const nextMonday = new Date(today);
-        const dayOfWeek = today.getDay();
-        const daysUntilNextMonday = (dayOfWeek === 0 ? 1 : 8) - dayOfWeek;
-        nextMonday.setDate(today.getDate() + daysUntilNextMonday);
-
-        const nextInvoiceDate = this.calculateNextInvoiceDate(nextMonday, data.frequency);
+        // Use provided start date or default to today + 1 day to avoid immediate generation
+        const startDate = data.startDate ? new Date(data.startDate) : new Date(Date.now() + 24 * 60 * 60 * 1000);
+        
+        const nextInvoiceDate = this.calculateNextInvoiceDate(startDate, data.frequency);
 
         const recurringInvoice = await this.prisma.recurringInvoice.create({
             data: {

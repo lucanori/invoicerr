@@ -378,6 +378,7 @@
             "status": {
                 "sent": "Envoyée",
                 "unpaid": "Impayée",
+                "partiallyPaid": "Partiellement payée",
                 "overdue": "En retard",
                 "paid": "Payée"
             },
@@ -396,6 +397,10 @@
                 "downloadPdf": "Télécharger le PDF",
                 "edit": "Modifier la facture",
                 "markAsPaid": "Marquer comme payée",
+                "confirmMarkAsPaid": "Confirmer le paiement",
+                "cancelMarkAsPaid": "Annuler",
+                "managePayments": "Gérer les paiements",
+                "sendByEmail": "Envoyer par email",
                 "delete": "Supprimer la facture"
             },
             "actions": {
@@ -1242,6 +1247,83 @@
             "week": "Semaine",
             "month": "Mois",
             "year": "Année"
+        }
+    },
+    "payments": {
+        "progress": {
+            "paid": "Payé",
+            "remaining": "Restant"
+        },
+        "form": {
+            "summary": {
+                "totalAmount": "Montant Total",
+                "totalPayments": "Total des Paiements",
+                "remaining": "Restant",
+                "overpayment": "Attention : Le total des paiements dépasse le montant de la facture"
+            },
+            "payments": {
+                "label": "Paiements"
+            },
+            "amount": {
+                "placeholder": "Montant",
+                "errors": {
+                    "required": "Le montant est requis",
+                    "min": "Le montant doit être positif",
+                    "invalid": "Montant invalide"
+                }
+            },
+            "date": {
+                "placeholder": "Date de paiement",
+                "errors": {
+                    "required": "La date est requise"
+                }
+            },
+            "method": {
+                "placeholder": "Méthode de paiement"
+            },
+            "notes": {
+                "placeholder": "Notes"
+            },
+            "addPayment": "Ajouter un Paiement",
+            "actions": {
+                "cancel": "Annuler",
+                "save": "Enregistrer les Paiements"
+            }
+        },
+        "dialog": {
+            "title": "Gérer les Paiements",
+            "summary": {
+                "title": "Résumé des Paiements"
+            },
+            "form": {
+                "title": "Gérer les Paiements"
+            },
+            "history": {
+                "title": "Historique des Paiements",
+                "empty": "Aucun paiement pour le moment",
+                "emptyDescription": "Ajoutez des paiements pour suivre les paiements partiels de cette facture"
+            },
+            "actions": {
+                "addPayment": "Ajouter un Paiement"
+            }
+        },
+        "view": {
+            "summary": {
+                "title": "État des Paiements"
+            },
+            "history": {
+                "title": "Historique des Paiements"
+            },
+            "actions": {
+                "managePayments": "Gérer les Paiements",
+                "addPayment": "Ajouter un Paiement"
+            }
+        },
+        "messages": {
+            "saveSuccess": "Paiements enregistrés avec succès",
+            "saveError": "Échec de l'enregistrement des paiements",
+            "deleteSuccess": "Paiement supprimé avec succès",
+            "deleteError": "Échec de la suppression du paiement"
         }
     }
 }

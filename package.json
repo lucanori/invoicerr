@@ -8,9 +8,21 @@
     "url": "https://github.com/lucanori/invoicerr.git"
   },
   "scripts": {
-    "dev": "echo 'Use docker compose up for development'",
-    "build": "echo 'Use docker buildx bake for building'",
-    "start": "echo 'Use docker compose up for running'"
+    "dev": "concurrently --names \"DB,Backend,Frontend\" --prefix-colors \"blue,green,magenta\" \"pnpm dev:db\" \"pnpm dev:backend\" \"pnpm dev:frontend\"",
+    "dev:db": "docker compose -f docker-compose.dev.yml up -d invoicerr_db",
+    "dev:backend": "wait-on tcp:5432 && cd backend && pnpm dev",
+    "dev:frontend": "cd frontend && pnpm dev",
+    "dev:stop": "pnpm dev:db:stop && pkill -f \"nest start --watch\" && pkill -f \"vite\"",
+    "dev:db:stop": "docker compose -f docker-compose.dev.yml down",
+    "dev:clean": "pnpm dev:stop && docker compose -f docker-compose.dev.yml down -v && cd backend && rm -rf dist && cd ../frontend && rm -rf dist",
+    "dev:logs": "docker compose -f docker-compose.dev.yml logs -f",
+    "setup": "pnpm install && cd backend && pnpm install && pnpm prisma generate && cd ../frontend && pnpm install",
+    "build": "cd backend && pnpm build && cd ../frontend && pnpm build",
+    "start": "echo 'Use docker compose up for running in production mode'"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0",
+    "wait-on": "^8.0.1"
   },
   "keywords": [
     "invoicing",

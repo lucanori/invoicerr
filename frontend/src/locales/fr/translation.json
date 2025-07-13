@@ -672,6 +672,26 @@
                 "create": "Créer la facture récurrente",
                 "save": "Enregistrer les modifications"
             }
+        },
+        "view": {
+            "title": "Détails de la facture récurrente",
+            "description": "Voir toutes les informations pertinentes sur cette facture récurrente.",
+            "fields": {
+                "client": "Client",
+                "paymentMethod": "Méthode de paiement",
+                "totalHT": "Total HT",
+                "totalVAT": "Montant TVA",
+                "totalTTC": "Total TTC",
+                "notes": "Notes"
+            }
+        },
+        "delete": {
+            "title": "Supprimer la facture récurrente",
+            "description": "Êtes-vous sûr de vouloir supprimer cette facture récurrente ? Cette action ne peut pas être annulée et arrêtera toute génération future de factures.",
+            "actions": {
+                "cancel": "Annuler",
+                "delete": "Supprimer la facture récurrente"
+            }
         }
     },
     "dashboard": {

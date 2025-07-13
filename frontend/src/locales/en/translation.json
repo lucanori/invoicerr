@@ -626,6 +626,17 @@
         "list": {
             "title": "Recurring Invoices",
             "description": "Manage your recurring invoices and automate billing.",
+            "item": {
+                "client": "Client",
+                "payment": "Payment",
+                "totalHT": "Total (excl. VAT)",
+                "totalTTC": "Total (incl. VAT)"
+            },
+            "tooltips": {
+                "view": "View recurring invoice details",
+                "edit": "Edit recurring invoice",
+                "delete": "Delete recurring invoice"
+            },
             "actions": {
                 "addNew": "Add New Recurring Invoice"
             }
@@ -732,6 +743,26 @@
                 "cancel": "Cancel",
                 "create": "Create Recurring Invoice",
                 "save": "Save Changes"
+            }
+        },
+        "view": {
+            "title": "Recurring Invoice Details",
+            "description": "View all relevant information about this recurring invoice.",
+            "fields": {
+                "client": "Client",
+                "paymentMethod": "Payment Method",
+                "totalHT": "Total (excl. VAT)",
+                "totalVAT": "VAT Amount",
+                "totalTTC": "Total (incl. VAT)",
+                "notes": "Notes"
+            }
+        },
+        "delete": {
+            "title": "Delete Recurring Invoice",
+            "description": "Are you sure you want to delete this recurring invoice? This action cannot be undone and will stop all future invoice generation.",
+            "actions": {
+                "cancel": "Cancel",
+                "delete": "Delete Recurring Invoice"
             }
         }
     },

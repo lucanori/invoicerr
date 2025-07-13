@@ -335,6 +335,17 @@
         "list": {
             "title": "Fatture Ricorrenti",
             "description": "Gestisci le tue fatture ricorrenti e automatizza la fatturazione.",
+            "item": {
+                "client": "Cliente",
+                "payment": "Pagamento",
+                "totalHT": "Totale (escl. IVA)",
+                "totalTTC": "Totale (incl. IVA)"
+            },
+            "tooltips": {
+                "view": "Visualizza dettagli fattura ricorrente",
+                "edit": "Modifica fattura ricorrente",
+                "delete": "Elimina fattura ricorrente"
+            },
             "actions": {
                 "addNew": "Aggiungi Nuova Fattura Ricorrente"
             }
@@ -342,6 +353,26 @@
         "emptyState": {
             "noInvoices": "Nessuna fattura ricorrente ancora",
             "startAdding": "Inizia creando la tua prima fattura ricorrente."
+        },
+        "view": {
+            "title": "Dettagli Fattura Ricorrente",
+            "description": "Visualizza tutte le informazioni pertinenti su questa fattura ricorrente.",
+            "fields": {
+                "client": "Cliente",
+                "paymentMethod": "Metodo di Pagamento",
+                "totalHT": "Totale (escl. IVA)",
+                "totalVAT": "Importo IVA",
+                "totalTTC": "Totale (incl. IVA)",
+                "notes": "Note"
+            }
+        },
+        "delete": {
+            "title": "Elimina Fattura Ricorrente",
+            "description": "Sei sicuro di voler eliminare questa fattura ricorrente? Questa azione non può essere annullata e interromperà tutta la generazione futura di fatture.",
+            "actions": {
+                "cancel": "Annulla",
+                "delete": "Elimina Fattura Ricorrente"
+            }
         },
         "actions": {
             "addNew": "Aggiungi Nuova Fattura Ricorrente"
